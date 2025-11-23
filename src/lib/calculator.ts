@@ -81,11 +81,14 @@ export function startCalculation() {
       
       // Schedule next run immediately to keep it "infinite"
       // Use setImmediate if available or setTimeout 0
-      setTimeout(runBatch, 0);
+      // On Vercel, we might want to yield more often to avoid blocking the event loop too much
+      setTimeout(runBatch, 10);
     } catch (error) {
       console.error("Calculation error:", error);
+      // If readonly error, we might be on Vercel cold start or permission issue
+      // We can't do much but retry or stop.
       // Retry after delay on error
-      setTimeout(runBatch, 1000);
+      setTimeout(runBatch, 2000);
     }
   };
 

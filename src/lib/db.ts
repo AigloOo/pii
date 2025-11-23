@@ -1,17 +1,19 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
-// Ensure the data directory exists
-const dataDir = path.join(process.cwd(), 'data');
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir);
+// Determine writable directory
+// On Vercel (production), only /tmp is writable
+const isProduction = process.env.NODE_ENV === 'production';
+const dataDir = isProduction ? os.tmpdir() : path.join(process.cwd(), 'data');
+
+if (!fs.existsSync(dataDir) && !isProduction) {
+  fs.mkdirSync(dataDir);
 }
 
 const dbPath = path.join(dataDir, 'pi.db');
-const db = new Database(dbPath);
-
-// Initialize Database
+const db = new Database(dbPath);// Initialize Database
 db.exec(`
   CREATE TABLE IF NOT EXISTS state (
     id INTEGER PRIMARY KEY CHECK (id = 1),

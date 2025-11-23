@@ -23,6 +23,7 @@
 	- Switched to Server-Sent Events (SSE) for fluid streaming.
 	- Added Virtual Scrolling for large dataset display.
 	- Implemented Server-Side Search.
+	- Fixed Vercel deployment issues (Read-only FS, Cron jobs).
 
 - [x] Install Required Extensions
 	- No specific VS Code extensions required.
