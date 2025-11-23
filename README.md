@@ -1,6 +1,6 @@
 # Infinite Pi Calculator
 
-A modern, Vercel-style web application that calculates Pi infinitely using a streaming algorithm.
+A web application that calculates Pi infinitely using a streaming algorithm.
 
 ## Features
 
