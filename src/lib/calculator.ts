@@ -29,7 +29,7 @@ export function startCalculation() {
       let newDigits = "";
       // Calculate a batch
       // Adjust batch size for performance vs responsiveness
-      const BATCH_SIZE = 50; 
+      const BATCH_SIZE = 50;
       const startTime = performance.now();
 
       // Run a few iterations
@@ -69,16 +69,16 @@ export function startCalculation() {
 
         // Log history every 100 digits
         if ((state.totalDigits + newDigits.length) % 100 < newDigits.length) {
-           addHistory(state.totalDigits + newDigits.length, timeTaken);
+          addHistory(state.totalDigits + newDigits.length, timeTaken);
         }
 
         // Emit event for stream
         piEvents.emit('update', {
-            newDigits,
-            totalDigits: state.totalDigits + newDigits.length
+          newDigits,
+          totalDigits: state.totalDigits + newDigits.length
         });
       }
-      
+
       // Schedule next run immediately to keep it "infinite"
       // Use setImmediate if available or setTimeout 0
       // On Vercel, we might want to yield more often to avoid blocking the event loop too much

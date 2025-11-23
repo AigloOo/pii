@@ -9,7 +9,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const dataDir = isProduction ? os.tmpdir() : path.join(process.cwd(), 'data');
 
 if (!fs.existsSync(dataDir) && !isProduction) {
-  fs.mkdirSync(dataDir);
+    fs.mkdirSync(dataDir);
 }
 
 const dbPath = path.join(dataDir, 'pi.db');
