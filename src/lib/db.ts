@@ -76,7 +76,7 @@ export const updateDbState = async (state: Partial<PiState>) => {
     // For simplicity, we assume we want to update the fields provided.
     // But sql template tag requires fixed structure or careful building.
     // Let's just update specific fields if they exist, or fetch-merge-update.
-    
+
     // Fetch-Merge-Update is safest for now.
     const currentState = await getDbState();
     const newState = { ...currentState, ...state };
@@ -136,7 +136,7 @@ export const searchSequence = async (seq: string): Promise<number> => {
 export const addHistory = async (count: number, timeTaken: number) => {
     const now = Date.now();
     await sql`INSERT INTO history (timestamp, count, timeTaken) VALUES (${now}, ${count}, ${timeTaken})`;
-    
+
     // Cleanup
     await sql`
     DELETE FROM history 
