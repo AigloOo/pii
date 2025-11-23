@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const index = searchSequence(q);
+        const index = await searchSequence(q);
         return NextResponse.json({
             found: index !== -1,
             index: index,

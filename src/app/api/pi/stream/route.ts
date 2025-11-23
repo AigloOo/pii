@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream({
-        start(controller) {
+        async start(controller) {
             const sendEvent = (data: any) => {
                 try {
                     controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
@@ -20,9 +20,9 @@ export async function GET(req: NextRequest) {
             };
 
             // Send initial state
-            const state = getDbState();
-            const history = getHistory();
-            const lastDigits = getDigits(5000); // Send more initial context
+            const state = await getDbState();
+            const history = await getHistory();
+            const lastDigits = await getDigits(5000); // Send more initial context
 
             sendEvent({
                 type: 'init',
@@ -33,17 +33,21 @@ export async function GET(req: NextRequest) {
             });
 
             // Listener for updates
-            const onUpdate = (data: any) => {
-                // Fetch latest history to send to client
-                // In a high-scale app, we'd optimize this, but for local it's fine
-                const currentHistory = getHistory();
+            const onUpdate = async (data: any) => {
+                try {
+                    // Fetch latest history to send to client
+                    // In a high-scale app, we'd optimize this, but for local it's fine
+                    const currentHistory = await getHistory();
 
-                sendEvent({
-                    type: 'update',
-                    newDigits: data.newDigits,
-                    totalDigits: data.totalDigits,
-                    history: currentHistory
-                });
+                    sendEvent({
+                        type: 'update',
+                        newDigits: data.newDigits,
+                        totalDigits: data.totalDigits,
+                        history: currentHistory
+                    });
+                } catch (err) {
+                    console.error("Error in stream update:", err);
+                }
             };
 
             piEvents.on('update', onUpdate);

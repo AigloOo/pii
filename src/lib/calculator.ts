@@ -16,9 +16,9 @@ export function startCalculation() {
   isRunning = true;
   console.log("Starting background Pi calculation...");
 
-  const runBatch = () => {
+  const runBatch = async () => {
     try {
-      const state = getDbState();
+      const state = await getDbState();
       let q = deserializeBigInt(state.q);
       let r = deserializeBigInt(state.r);
       let t = deserializeBigInt(state.t);
@@ -57,19 +57,20 @@ export function startCalculation() {
       const timeTaken = performance.now() - startTime;
 
       if (newDigits.length > 0) {
-        appendDigits(newDigits);
-        updateDbState({
+        await appendDigits(newDigits);
+        await updateDbState({
           q: serializeBigInt(q),
           r: serializeBigInt(r),
           t: serializeBigInt(t),
           k: serializeBigInt(k),
           n: serializeBigInt(n),
-          l: serializeBigInt(l)
+          l: serializeBigInt(l),
+          totalDigits: state.totalDigits + newDigits.length
         });
 
         // Log history every 100 digits
         if ((state.totalDigits + newDigits.length) % 100 < newDigits.length) {
-          addHistory(state.totalDigits + newDigits.length, timeTaken);
+          await addHistory(state.totalDigits + newDigits.length, timeTaken);
         }
 
         // Emit event for stream
